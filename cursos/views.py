@@ -4,8 +4,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
+from django.contrib.auth.models import User
 from .models import Curso, Horario, Material
-from .serializers import CursoSerializer, HorarioSerializer, MaterialSerializer
+from .serializers import CursoSerializer, HorarioSerializer, MaterialSerializer, UserSerializer
 
 class CursoViewSet(viewsets.ModelViewSet):
     """
@@ -80,3 +81,36 @@ class MaterialViewSet(viewsets.ModelViewSet):
     
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['curso', 'tipo_material']
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para gestionar usuarios del sistema
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]  # Temporal para pruebas
+    
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['is_active', 'is_staff', 'is_superuser']
+    search_fields = ['username', 'first_name', 'last_name', 'email']
+    ordering_fields = ['username', 'date_joined', 'last_login']
+    ordering = ['-date_joined']
+
+    @action(detail=False, methods=['get'])
+    def estadisticas(self, request):
+        """
+        Endpoint para obtener estadísticas de usuarios
+        """
+        total_usuarios = User.objects.count()
+        usuarios_activos = User.objects.filter(is_active=True).count()
+        usuarios_staff = User.objects.filter(is_staff=True).count()
+        superusuarios = User.objects.filter(is_superuser=True).count()
+        
+        estadisticas = {
+            'total_usuarios': total_usuarios,
+            'usuarios_activos': usuarios_activos,
+            'usuarios_staff': usuarios_staff,
+            'superusuarios': superusuarios,
+        }
+        
+        return Response(estadisticas)

@@ -1,0 +1,189 @@
+AmbienteSena/                                    # 🏠 RAÍZ DEL PROYECTO
+│
+├── 🐍 BACKEND DJANGO/                          # ===============================
+│   ├── manage.py                               # 🔧 Comando principal Django
+│   ├── db.sqlite3                             # 🗃️ Base de datos SQLite (alternativa)
+│   ├── requirements.txt                       # 📦 Dependencias Python
+│   │
+│   ├── AmbienteSena/                          # ⚙️ CONFIGURACIÓN PRINCIPAL
+│   │   ├── __init__.py
+│   │   ├── settings.py                        # ⚙️ Configuración Django + CORS + JWT
+│   │   ├── urls.py                           # 🌐 URLs principales + JWT tokens
+│   │   ├── views.py                          # 📄 Vistas generales
+│   │   ├── wsgi.py                           # 🚀 Servidor WSGI
+│   │   ├── asgi.py                           # 🚀 Servidor ASGI
+│   │   │
+│   │   ├── Templates/                        # 📄 Plantillas HTML (opcional)
+│   │   │   └── index.html                    # 🏠 Página principal Django
+│   │   │
+│   │   └── Public/                           # 📁 Archivos estáticos Django
+│   │       ├── Css/                          # 🎨 Estilos CSS
+│   │       ├── Js/                           # ⚡ JavaScript
+│   │       └── Img/                          # 🖼️ Imágenes
+│   │
+│   └── cursos/                               # 📚 APP PRINCIPAL DJANGO
+│       ├── __init__.py
+│       ├── apps.py                           # ⚙️ Configuración de la app
+│       ├── admin.py                          # 👨‍💼 Configuración Django Admin
+│       ├── models.py                         # 🗃️ MODELOS: Curso, Horario, Material
+│       ├── serializers.py                   # 🔄 SERIALIZERS: CRUD + validaciones
+│       ├── views.py                          # 📊 VIEWSETS: API REST + estadísticas
+│       ├── urls.py                           # 🌐 URLs de la API REST
+│       ├── tests.py                          # 🧪 Tests (opcional)
+│       │
+│       └── migrations/                       # 📋 MIGRACIONES DE BD
+│           ├── __init__.py
+│           ├── 0001_initial.py               # 🆕 Migración inicial
+│           ├── 0002_horario_material.py      # ➕ Agregar Horario + Material
+│           └── 0003_rename_fields.py         # 🔄 Actualización de campos
+│
+├── 🚀 FRONTEND QUASAR/                        # ===============================
+│   ├── package.json                          # 📦 Dependencias Node.js
+│   ├── package-lock.json                     # 🔒 Versiones exactas
+│   ├── quasar.config.js                      # ⚙️ Configuración Quasar
+│   ├── index.html                            # 🏠 HTML principal
+│   ├── .gitignore                            # 🚫 Archivos ignorados por Git
+│   ├── README.md                             # 📖 Documentación
+│   │
+│   ├── public/                               # 📁 Archivos públicos
+│   │   ├── favicon.ico                       # 🔖 Icono del sitio
+│   │   └── icons/                            # 🖼️ Iconos PWA
+│   │
+│   └── src/                                  # 📂 CÓDIGO FUENTE PRINCIPAL
+│       ├── App.vue                           # 🏠 Componente raíz Vue
+│       │
+│       ├── boot/                             # 🚀 CONFIGURACIÓN INICIAL
+│       │   └── axios.js                      # 🌐 Configuración HTTP + Django
+│       │
+│       ├── components/                       # 🧩 COMPONENTES REUTILIZABLES
+│       │   └── EssentialLink.vue             # 🔗 Enlaces del menú
+│       │
+│       ├── layouts/                          # 🖼️ LAYOUTS DE PÁGINA
+│       │   └── MainLayout.vue                # 🏗️ Layout principal + menú lateral
+│       │
+│       ├── pages/                            # 📄 PÁGINAS PRINCIPALES
+│       │   ├── IndexPage.vue                 # 📊 DASHBOARD principal
+│       │   ├── CursosPage.vue               # 📚 Gestión de CURSOS
+│       │   ├── HorariosPage.vue             # ⏰ Gestión de HORARIOS
+│       │   ├── MaterialesPage.vue           # 📁 Gestión de MATERIALES
+│       │   ├── UsuariosPage.vue             # 👥 Gestión de USUARIOS
+│       │   ├── AsesoriaPage.vue             # 🎯 Asesoría (opcional)
+│       │   ├── CapacitacionPage.vue         # 📈 Capacitación (opcional)
+│       │   └── ErrorNotFound.vue            # ❌ Página 404
+│       │
+│       ├── router/                           # 🛣️ ENRUTAMIENTO
+│       │   ├── index.js                      # ⚙️ Configuración del router
+│       │   └── routes.js                     # 🗺️ TODAS LAS RUTAS del sistema
+│       │
+│       ├── services/                         # 🔧 SERVICIOS DE API
+│       │   └── cursosService.js              # 📚 Servicio para cursos (opcional)
+│       │
+│       ├── css/                              # 🎨 ESTILOS GLOBALES
+│       │   ├── app.scss                      # 🎨 Estilos principales
+│       │   └── quasar.variables.scss         # 🎨 Variables de Quasar
+│       │
+│       └── assets/                           # 📁 RECURSOS ESTÁTICOS
+│           └── quasar-logo-vertical.svg      # 🖼️ Logo de Quasar
+│
+├── 🗄️ BASE DE DATOS MYSQL/                    # ===============================
+│   ├── ambientesena                          # 🏪 Base de datos principal
+│   │   ├── cursos_curso                      # 📚 Tabla de CURSOS
+│   │   ├── cursos_horario                    # ⏰ Tabla de HORARIOS
+│   │   ├── cursos_material                   # 📁 Tabla de MATERIALES
+│   │   ├── auth_user                         # 👥 Tabla de USUARIOS
+│   │   ├── auth_group                        # 👨‍👩‍👧‍👦 Grupos de usuarios
+│   │   ├── auth_permission                   # 🔐 Permisos del sistema
+│   │   ├── django_admin_log                  # 📋 Log de administración
+│   │   ├── django_content_type               # 🏷️ Tipos de contenido
+│   │   ├── django_migrations                 # 📋 Historial de migraciones
+│   │   └── django_session                    # 🎫 Sesiones de usuario
+│   │
+│   └── 📊 ESTRUCTURA DE DATOS:
+│       ├── CURSOS: id, nombre, codigo, descripcion, duracion_horas, modalidad, activo
+│       ├── HORARIOS: id, curso_id, dia_semana, hora_inicio, hora_fin, aula, instructor
+│       ├── MATERIALES: id, curso_id, nombre, tipo_material, archivo, enlace_externo
+│       └── USUARIOS: id, username, email, first_name, last_name, is_active, is_staff
+│
+├── 🌐 URLs DISPONIBLES/                       # ===============================
+│   │
+│   ├── 🚀 FRONTEND QUASAR (localhost:9000)
+│   │   ├── /                                 # 📊 Dashboard principal
+│   │   ├── /cursos                           # 📚 Gestión de cursos
+│   │   ├── /horarios                         # ⏰ Gestión de horarios  
+│   │   ├── /materiales                       # 📁 Gestión de materiales
+│   │   ├── /usuarios                         # 👥 Gestión de usuarios
+│   │   ├── /asesoria                         # 🎯 Asesoría (opcional)
+│   │   └── /capacitacion                     # 📈 Capacitación (opcional)
+│   │
+│   ├── 🐍 API DJANGO REST (localhost:8000)
+│   │   ├── /api/cursos/                      # 📚 CRUD cursos + estadísticas
+│   │   ├── /api/horarios/                    # ⏰ CRUD horarios + filtros
+│   │   ├── /api/materiales/                  # 📁 CRUD materiales + archivos
+│   │   ├── /api/auth/users/                  # 👥 CRUD usuarios + permisos
+│   │   ├── /api/token/                       # 🎫 Autenticación JWT
+│   │   └── /admin/                           # 👨‍💼 Panel administración Django
+│   │
+│   └── 🗄️ BASE DE DATOS (localhost:3306)
+│       └── phpMyAdmin: localhost/phpmyadmin   # 🗄️ Gestión de BD
+│
+├── 📋 FUNCIONALIDADES IMPLEMENTADAS/          # ===============================
+│   │
+│   ├── ✅ GESTIÓN DE CURSOS
+│   │   ├── 📋 CRUD completo (Crear, Leer, Actualizar, Eliminar)
+│   │   ├── 🔍 Búsqueda y filtros por modalidad/estado
+│   │   ├── 📊 Estadísticas en tiempo real
+│   │   ├── ✅ Validación de códigos únicos
+│   │   └── 🔄 Actualizaciones sin recargar página
+│   │
+│   ├── ✅ GESTIÓN DE HORARIOS
+│   │   ├── 📋 CRUD completo por curso
+│   │   ├── 🔍 Filtros por curso y día de la semana
+│   │   ├── ⏰ Validación de horarios (inicio < fin)
+│   │   ├── 🏫 Gestión de aulas e instructores
+│   │   └── 📅 Vista de horarios por día
+│   │
+│   ├── ✅ GESTIÓN DE MATERIALES
+│   │   ├── 📋 CRUD completo con archivos
+│   │   ├── 📤 Subida de archivos (PDF, DOC, etc.)
+│   │   ├── 🔗 Enlaces externos (YouTube, Google Drive)
+│   │   ├── 🔍 Filtros por curso y tipo de material
+│   │   ├── 🏷️ Categorización por tipos
+│   │   └── 💾 Descarga de archivos
+│   │
+│   ├── ✅ GESTIÓN DE USUARIOS
+│   │   ├── 📋 CRUD completo de usuarios
+│   │   ├── 🔐 Gestión de permisos (staff, superusuario)
+│   │   ├── 🔍 Búsqueda por nombre, email, username
+│   │   ├── ✅ Activar/desactivar usuarios
+│   │   ├── 📊 Estadísticas de usuarios
+│   │   └── 🔒 Encriptación de contraseñas
+│   │
+│   ├── ✅ DASHBOARD PRINCIPAL
+│   │   ├── 📊 Estadísticas globales del sistema
+│   │   ├── 📈 Gráficos de distribución por modalidad
+│   │   ├── 📋 Actividad reciente del sistema
+│   │   ├── ⚡ Accesos rápidos a funciones principales
+│   │   └── 🔍 Estado del sistema en tiempo real
+│   │
+│   └── ✅ CARACTERÍSTICAS TÉCNICAS
+│       ├── 🔄 Actualizaciones en tiempo real (sin recargar)
+│       ├── 📱 Diseño responsive (móvil + desktop)
+│       ├── ✅ Validación frontend + backend
+│       ├── 🔔 Notificaciones informativas
+│       ├── 🎨 Interfaz moderna con Quasar
+│       ├── 🚀 API REST completa con Django
+│       ├── 🗄️ Base de datos MySQL relacional
+│       └── 🔐 Autenticación JWT (preparado)
+│
+└── 🚀 COMANDOS PARA EJECUTAR/                 # ===============================
+    │
+    ├── Backend Django:
+    │   cd AmbienteSena/
+    │   python manage.py runserver              # 🚀 http://127.0.0.1:8000
+    │
+    ├── Frontend Quasar:
+    │   cd frontend_quasar/
+    │   npm run dev                             # 🚀 http://localhost:9000
+    │
+    └── Base de Datos:
+        XAMPP/WAMP/MAMP                        # 🗄️ localhost/phpmyadmin

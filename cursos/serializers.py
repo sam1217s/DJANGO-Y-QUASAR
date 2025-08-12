@@ -1,15 +1,11 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from .models import Curso, Horario, Material
 
 class CursoSerializer(serializers.ModelSerializer):
     """
-    Serializer para el modelo Curso
-    Convierte entre objetos Python y JSON
+    Serializer simplificado para debugging
     """
-    # Campos calculados (solo lectura)
-    total_horarios = serializers.SerializerMethodField()
-    total_materiales = serializers.SerializerMethodField()
-    
     class Meta:
         model = Curso
         fields = [
@@ -21,37 +17,39 @@ class CursoSerializer(serializers.ModelSerializer):
             'modalidad',
             'activo',
             'fecha_creacion',
-            'fecha_actualizacion',
-            'total_horarios',
-            'total_materiales'
+            'fecha_actualizacion'
         ]
         read_only_fields = ['fecha_creacion', 'fecha_actualizacion']
     
-    def get_total_horarios(self, obj):
-        """Obtener número total de horarios del curso"""
-        return obj.horarios.count()
-    
-    def get_total_materiales(self, obj):
-        """Obtener número total de materiales del curso"""
-        return obj.materiales.count()
-    
     def validate_codigo(self, value):
         """Validar que el código sea único"""
+        print(f"Validando código: {value}")  # Debug
+        
         if self.instance:
             # Actualización: excluir la instancia actual
-            if Curso.objects.exclude(id=self.instance.id).filter(codigo=value).exists():
+            exists = Curso.objects.exclude(id=self.instance.id).filter(codigo=value).exists()
+            print(f"Código existe en actualización: {exists}")
+            if exists:
                 raise serializers.ValidationError("Ya existe un curso con este código.")
         else:
             # Creación: verificar que no exista
-            if Curso.objects.filter(codigo=value).exists():
+            exists = Curso.objects.filter(codigo=value).exists()
+            print(f"Código existe en creación: {exists}")
+            if exists:
                 raise serializers.ValidationError("Ya existe un curso con este código.")
         return value
     
     def validate_duracion_horas(self, value):
         """Validar que la duración sea positiva"""
-        if value <= 0:
+        print(f"Validando duración: {value}")  # Debug
+        if value is None or value <= 0:
             raise serializers.ValidationError("La duración debe ser mayor a 0 horas.")
         return value
+
+    def validate(self, data):
+        """Validación general"""
+        print(f"Datos recibidos: {data}")  # Debug
+        return data
 
 class HorarioSerializer(serializers.ModelSerializer):
     """
@@ -73,26 +71,12 @@ class HorarioSerializer(serializers.ModelSerializer):
             'fecha_creacion'
         ]
         read_only_fields = ['fecha_creacion']
-    
-    def validate(self, data):
-        """Validación a nivel de objeto"""
-        hora_inicio = data.get('hora_inicio')
-        hora_fin = data.get('hora_fin')
-        
-        if hora_inicio and hora_fin:
-            if hora_inicio >= hora_fin:
-                raise serializers.ValidationError(
-                    "La hora de inicio debe ser anterior a la hora de fin."
-                )
-        
-        return data
 
 class MaterialSerializer(serializers.ModelSerializer):
     """
     Serializer para el modelo Material
     """
     curso_nombre = serializers.CharField(source='curso.nombre', read_only=True)
-    archivo_url = serializers.SerializerMethodField()
     
     class Meta:
         model = Material
@@ -104,59 +88,51 @@ class MaterialSerializer(serializers.ModelSerializer):
             'descripcion',
             'tipo_material',
             'archivo',
-            'archivo_url',
             'enlace_externo',
             'fecha_creacion'
         ]
         read_only_fields = ['fecha_creacion']
-    
-    def get_archivo_url(self, obj):
-        """Obtener URL completa del archivo"""
-        if obj.archivo:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.archivo.url)
-            return obj.archivo.url
-        return None
-    
-    def validate(self, data):
-        """Validar que tenga archivo o enlace externo"""
-        archivo = data.get('archivo')
-        enlace_externo = data.get('enlace_externo')
-        
-        if not archivo and not enlace_externo:
-            raise serializers.ValidationError(
-                "Debe proporcionar un archivo o un enlace externo."
-            )
-        
-        return data
 
-# Serializers adicionales para casos específicos
-
-class CursoListSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     """
-    Serializer simplificado para listar cursos
-    Más eficiente para listas grandes
+    Serializer para el modelo User de Django
     """
+    password = serializers.CharField(write_only=True, required=False)
+    
     class Meta:
-        model = Curso
+        model = User
         fields = [
             'id',
-            'nombre',
-            'codigo',
-            'modalidad',
-            'duracion_horas',
-            'activo',
-            'fecha_creacion'
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'password',
+            'is_active',
+            'is_staff',
+            'is_superuser',
+            'date_joined',
+            'last_login'
         ]
-
-class CursoDetailSerializer(CursoSerializer):
-    """
-    Serializer detallado para curso individual
-    Incluye horarios y materiales relacionados
-    """
-    horarios = HorarioSerializer(many=True, read_only=True)
-    materiales = MaterialSerializer(many=True, read_only=True)
+        read_only_fields = ['date_joined', 'last_login']
     
-    class Meta(CursoSerializer.Meta):
-        fields = CursoSerializer.Meta.fields + ['horarios', 'materiales']
+    def create(self, validated_data):
+        """Crear usuario con contraseña encriptada"""
+        password = validated_data.pop('password', None)
+        user = User.objects.create(**validated_data)
+        if password:
+            user.set_password(password)
+            user.save()
+        return user
+    
+    def update(self, instance, validated_data):
+        """Actualizar usuario, encriptando contraseña si se proporciona"""
+        password = validated_data.pop('password', None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        if password:
+            instance.set_password(password)
+        
+        instance.save()
+        return instance

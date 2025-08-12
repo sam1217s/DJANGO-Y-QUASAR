@@ -426,6 +426,9 @@ export default {
           
           cursosUpdating.value = cursosUpdating.value.filter(id => id !== cursoId)
           
+          // Cerrar modal INMEDIATAMENTE después de actualizar
+          closeDialog()
+          
           Notify.create({
             type: 'positive',
             message: `Curso "${savedCurso.nombre}" actualizado exitosamente`,
@@ -440,6 +443,9 @@ export default {
           // Agregar inmediatamente a la lista
           cursos.value.unshift(savedCurso)
           
+          // Cerrar modal INMEDIATAMENTE después de crear
+          closeDialog()
+          
           Notify.create({
             type: 'positive',
             message: `Curso "${savedCurso.nombre}" creado exitosamente`,
@@ -448,7 +454,6 @@ export default {
           })
         }
 
-        closeDialog()
         console.log('Curso guardado:', savedCurso)
         
       } catch (error) {
@@ -490,6 +495,8 @@ export default {
             position: 'top'
           })
         }
+        
+        // NO cerrar el modal si hay error para que el usuario pueda corregir
       } finally {
         saving.value = false
       }
